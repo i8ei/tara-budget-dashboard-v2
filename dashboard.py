@@ -418,17 +418,6 @@ kouhi_total = int(nature_agg[nature_agg["性質"] == "公債費"]["金額"].sum(
 kouhi_ratio = safe_pct(kouhi_total, total_exp)
 
 
-def health_signal(value, thresholds, reverse=False):
-    """3色判定。reverse=Trueなら低いほど悪い"""
-    labels = ("良好", "注意", "要警戒")
-    colors = ("#22c55e", "#eab308", "#f43f5e")
-    t1, t2 = thresholds
-    if reverse:
-        idx = 0 if value >= t1 else (1 if value >= t2 else 2)
-    else:
-        idx = 0 if value <= t1 else (1 if value <= t2 else 2)
-    return colors[idx], labels[idx]
-
 
 # ── 指標バー ──
 sign_class = "" if diff >= 0 else "minus"
@@ -476,38 +465,37 @@ kuan_color_map = {k: KUAN_COLORS[i % len(KUAN_COLORS)] for i, k in enumerate(kua
 with tab1:
     # ── 財政ヘルスメーター ──
     st.markdown('<div class="section-title">財政の健全度チェック</div>', unsafe_allow_html=True)
-    _hc_oblig_color, _hc_oblig_label = health_signal(obligatory_ratio, (50, 60))
-    _hc_indep_color, _hc_indep_label = health_signal(indep_adjusted_ratio, (30, 20), reverse=True)
-    _hc_kouhi_color, _hc_kouhi_label = health_signal(kouhi_ratio, (15, 20))
+    _free_ratio = 100 - obligatory_ratio
+    _oblig_meaning = f"予算の約{_free_ratio:.0f}%を町の判断で自由に使えます"
+    _dep_ratio = 100 - indep_adjusted_ratio
+    _indep_meaning = f"{indep_adjusted_ratio:.0f}%は自力で稼ぎ、{_dep_ratio:.0f}%は国・県頼りです"
+    _kouhi_meaning = "借金返済は軽め。新たな投資の余力があります" if kouhi_ratio <= 15 else "借金返済がやや重く、新規投資の余力が限られます"
+
     hm1, hm2, hm3 = st.columns(3)
     with hm1:
         st.markdown(f"""
         <div class="indicator-card">
             <div class="indicator-label">{tip("義務的経費")}比率</div>
-            <div class="indicator-value" style="color:{_hc_oblig_color}">{obligatory_ratio:.1f}<span style="font-size:1rem">%</span></div>
-            <div class="indicator-sub" style="color:{_hc_oblig_color};font-weight:600">● {_hc_oblig_label}</div>
-            <div class="indicator-sub">必ず払う経費の割合</div>
+            <div class="indicator-value">{obligatory_ratio:.1f}<span style="font-size:1rem">%</span></div>
+            <div class="indicator-sub">→ {_oblig_meaning}</div>
         </div>
         """, unsafe_allow_html=True)
     with hm2:
         st.markdown(f"""
         <div class="indicator-card">
             <div class="indicator-label">{tip("自主財源")}比率（ふるさと納税除く）</div>
-            <div class="indicator-value" style="color:{_hc_indep_color}">{indep_adjusted_ratio:.1f}<span style="font-size:1rem">%</span></div>
-            <div class="indicator-sub" style="color:{_hc_indep_color};font-weight:600">● {_hc_indep_label}</div>
-            <div class="indicator-sub">町が自力で集めるお金の割合</div>
+            <div class="indicator-value">{indep_adjusted_ratio:.1f}<span style="font-size:1rem">%</span></div>
+            <div class="indicator-sub">→ {_indep_meaning}</div>
         </div>
         """, unsafe_allow_html=True)
     with hm3:
         st.markdown(f"""
         <div class="indicator-card">
             <div class="indicator-label">{tip("公債費")}比率</div>
-            <div class="indicator-value" style="color:{_hc_kouhi_color}">{kouhi_ratio:.1f}<span style="font-size:1rem">%</span></div>
-            <div class="indicator-sub" style="color:{_hc_kouhi_color};font-weight:600">● {_hc_kouhi_label}</div>
-            <div class="indicator-sub">借金返済が予算に占める割合</div>
+            <div class="indicator-value">{kouhi_ratio:.1f}<span style="font-size:1rem">%</span></div>
+            <div class="indicator-sub">→ {_kouhi_meaning}</div>
         </div>
         """, unsafe_allow_html=True)
-    st.caption("※ 一般的な自治体の目安です。太良町固有の事情で異なる場合があります")
 
     # ── 町民1人あたり内訳 ──
     st.markdown('<div class="section-title">町民1人あたりの予算 ── あなたの暮らしに使われるお金</div>', unsafe_allow_html=True)
