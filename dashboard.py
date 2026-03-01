@@ -467,7 +467,7 @@ with tab1:
     st.markdown('<div class="section-title">財政の健全度チェック</div>', unsafe_allow_html=True)
     _oblig_meaning = f"予算の約{obligatory_ratio:.0f}%は人件費・福祉・借金返済で固定されています"
     _dep_ratio = 100 - indep_adjusted_ratio
-    _indep_meaning = f"{indep_adjusted_ratio:.0f}%は自力で稼ぎ、{_dep_ratio:.0f}%は国・県頼りです"
+    _indep_meaning = f"町税等で{indep_adjusted_ratio:.0f}%を賄い、{_dep_ratio:.0f}%は国・県からの交付金等です"
     _kouhi_meaning = "借金返済は軽め。新たな投資の余力があります" if kouhi_ratio <= 15 else "借金返済がやや重く、新規投資の余力が限られます"
 
     hm1, hm2, hm3 = st.columns(3)
