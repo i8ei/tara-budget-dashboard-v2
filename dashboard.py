@@ -355,7 +355,7 @@ def load_data():
 summary, expenditure, major_projects, special_accounts = load_data()
 
 # ── ヘッダー ──
-st.markdown("## 太良町 予算ダッシュボード")
+st.markdown("## 太良町 令和８年度予算ダッシュボード")
 budget_type = "歳出"
 
 # ── データ準備 ──
