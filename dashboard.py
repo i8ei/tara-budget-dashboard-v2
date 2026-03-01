@@ -124,12 +124,24 @@ st.markdown("""
         color: #1e293b;
         margin: 2rem 0 0.5rem 0;
     }
-    .stTabs [data-baseweb="tab-list"] { gap: 4px; }
+    .stTabs [data-baseweb="tab-list"] { gap: 6px; }
     .stTabs [data-baseweb="tab"] {
         border-radius: 8px;
         padding: 10px 20px;
         font-weight: 600;
         font-size: 1rem;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        cursor: pointer;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        background: #e2e8f0;
+        border-color: #94a3b8;
+    }
+    .stTabs [aria-selected="true"] {
+        background: #2563eb !important;
+        color: #fff !important;
+        border-color: #2563eb !important;
     }
 
     /* ── チェックリスト ── */
