@@ -13,14 +13,21 @@ from common import inject_css
 inject_css()
 
 # ── ビュー切り替え ──
-view = st.sidebar.radio("ビュー", ["📋 令和8年度 詳細", "📊 3年比較（R6〜R8）"])
+view = st.sidebar.radio("ビュー", [
+    "📋 令和8年度 詳細",
+    "📊 3年比較（R6〜R8）",
+    "🏥 病院事業会計",
+])
 
 if view.startswith("📋"):
     import view_single
     view_single.render()
-else:
+elif view.startswith("📊"):
     import view_compare
     view_compare.render()
+else:
+    import view_hospital
+    view_hospital.render()
 
 # ── フッター ──
 st.markdown("---")
